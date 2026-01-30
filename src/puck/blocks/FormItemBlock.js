@@ -7,7 +7,8 @@ import { Form } from "antd";
  * @property {string} name
  * @property {boolean} required
  * @property {string} help
- * @property {React.ReactNode|React.ReactNode[]} content
+ * @property {{ renderDropZone: Function }} puck
+ * @property {string} id
  */
 
 const FormItemBlock = {
@@ -20,7 +21,6 @@ const FormItemBlock = {
       { label: "Required", value: true },
     ] },
     help: { type: "text" },
-    content: { type: "slot" },
   },
   defaultProps: {
     label: "Field",
@@ -31,8 +31,8 @@ const FormItemBlock = {
   /**
    * @param {FormItemBlockProps} props
    */
-  render: ({ label, name, required, help, content }) => {
-    const child = Array.isArray(content) ? content[0] : content;
+  render: ({ label, name, required, help, puck, id }) => {
+    const zone = `form-item-${id}-content`;
     return (
       <Form.Item
         label={label || undefined}
@@ -40,7 +40,10 @@ const FormItemBlock = {
         required={required}
         help={help || undefined}
       >
-        {child}
+        {puck.renderDropZone({
+          zone,
+          allow: ["Input", "Select", "DatePicker"],
+        })}
       </Form.Item>
     );
   },
