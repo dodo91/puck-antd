@@ -5,7 +5,8 @@ import { Form } from "antd";
  * @typedef {Object} FormBlockProps
  * @property {"horizontal"|"vertical"|"inline"} layout
  * @property {string} name
- * @property {React.ReactNode} content
+ * @property {{ renderDropZone: Function }} puck
+ * @property {string} id
  */
 
 const layoutOptions = [
@@ -22,7 +23,6 @@ const FormBlock = {
       options: layoutOptions,
     },
     name: { type: "text" },
-    content: { type: "slot" },
   },
   defaultProps: {
     layout: "vertical",
@@ -31,11 +31,17 @@ const FormBlock = {
   /**
    * @param {FormBlockProps} props
    */
-  render: ({ layout, name, content }) => (
-    <Form layout={layout} name={name || undefined}>
-      {content}
-    </Form>
-  ),
+  render: ({ layout, name, puck, id }) => {
+    const zone = `form-${id}-content`;
+    return (
+      <Form layout={layout} name={name || undefined}>
+        {puck.renderDropZone({
+          zone,
+          allow: ["FormItem", "Button", "Row", "Col", "Typography", "Card"],
+        })}
+      </Form>
+    );
+  },
 };
 
 export default FormBlock;
