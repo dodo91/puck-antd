@@ -42,7 +42,7 @@ const FormItemBlock = {
       >
         {puck.renderDropZone({
           zone,
-          allow: ["Input", "Select", "DatePicker"],
+          allow: ["Input", "Select", "DatePicker", "Stack"],
         })}
       </Form.Item>
     );

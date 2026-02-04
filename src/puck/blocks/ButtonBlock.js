@@ -7,10 +7,12 @@ import { Button } from "antd";
  * @property {"primary"|"default"|"dashed"|"link"|"text"} type
  * @property {"button"|"submit"|"reset"} htmlType
  * @property {boolean} disabled
+ * @property {{ dragRef: Function }} puck
  */
 
 const ButtonBlock = {
   label: "Button",
+  inline: true,
   fields: {
     text: { type: "text" },
     type: {
@@ -48,10 +50,12 @@ const ButtonBlock = {
   /**
    * @param {ButtonBlockProps} props
    */
-  render: ({ text, type, htmlType, disabled }) => (
-    <Button type={type} htmlType={htmlType} disabled={disabled}>
-      {text || "Button"}
-    </Button>
+  render: ({ text, type, htmlType, disabled, puck }) => (
+    <span className="inline-control" ref={puck.dragRef}>
+      <Button type={type} htmlType={htmlType} disabled={disabled}>
+        {text || "Button"}
+      </Button>
+    </span>
   ),
 };
 

@@ -6,10 +6,12 @@ import { DatePicker } from "antd";
  * @property {string} placeholder
  * @property {"date"|"week"|"month"|"quarter"|"year"} picker
  * @property {boolean} disabled
+ * @property {{ dragRef: Function }} puck
  */
 
 const DatePickerBlock = {
   label: "Date Picker",
+  inline: true,
   fields: {
     placeholder: { type: "text" },
     picker: {
@@ -38,8 +40,10 @@ const DatePickerBlock = {
   /**
    * @param {DatePickerBlockProps} props
    */
-  render: ({ placeholder, picker, disabled }) => (
-    <DatePicker placeholder={placeholder} picker={picker} disabled={disabled} />
+  render: ({ placeholder, picker, disabled, puck }) => (
+    <span className="inline-control" ref={puck.dragRef}>
+      <DatePicker placeholder={placeholder} picker={picker} disabled={disabled} />
+    </span>
   ),
 };
 

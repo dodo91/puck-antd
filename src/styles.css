@@ -11,3 +11,34 @@ body {
 .puck {
   min-height: 100vh;
 }
+
+.row-dropzone {
+  width: 100%;
+}
+
+.row-dropzone > div[data-puck-component] { flex: 1 1 100%; width: 100%; min-width: 0; }
+
+.row-dropzone:empty {
+  min-height: 64px;
+}
+
+.col-block {
+  min-height: 40px;
+  padding: 4px;
+  box-sizing: border-box;
+}
+
+.col-dropzone:empty {
+  min-height: 32px;
+}
+
+.stack-dropzone:empty {
+  min-height: 32px;
+}
+
+.inline-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  max-width: 100%;
+}

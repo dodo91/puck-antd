@@ -37,7 +37,15 @@ const FormBlock = {
       <Form layout={layout} name={name || undefined}>
         {puck.renderDropZone({
           zone,
-          allow: ["FormItem", "Button", "Row", "Col", "Typography", "Card"],
+          allow: [
+            "FormItem",
+            "Button",
+            "Row",
+            "Col",
+            "Stack",
+            "Typography",
+            "Card",
+          ],
         })}
       </Form>
     );

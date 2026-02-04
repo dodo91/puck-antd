@@ -7,6 +7,7 @@ import FormItemBlock from "./FormItemBlock";
 import InputBlock from "./InputBlock";
 import RowBlock from "./RowBlock";
 import SelectBlock from "./SelectBlock";
+import StackBlock from "./StackBlock";
 import TableBlock from "./TableBlock";
 import TypographyBlock from "./TypographyBlock";
 
@@ -20,6 +21,7 @@ const blocks = {
   DatePicker: DatePickerBlock,
   Row: RowBlock,
   Col: ColBlock,
+  Stack: StackBlock,
   Table: TableBlock,
   Typography: TypographyBlock,
 };

@@ -6,10 +6,12 @@ import { Input } from "antd";
  * @property {string} placeholder
  * @property {boolean} disabled
  * @property {boolean} allowClear
+ * @property {{ dragRef: Function }} puck
  */
 
 const InputBlock = {
   label: "Input",
+  inline: true,
   fields: {
     placeholder: { type: "text" },
     disabled: {
@@ -35,8 +37,10 @@ const InputBlock = {
   /**
    * @param {InputBlockProps} props
    */
-  render: ({ placeholder, disabled, allowClear }) => (
-    <Input placeholder={placeholder} disabled={disabled} allowClear={allowClear} />
+  render: ({ placeholder, disabled, allowClear, puck }) => (
+    <span className="inline-control" ref={puck.dragRef}>
+      <Input placeholder={placeholder} disabled={disabled} allowClear={allowClear} />
+    </span>
   ),
 };
 

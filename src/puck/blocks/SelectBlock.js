@@ -9,6 +9,7 @@ import { Select } from "antd";
  * @property {SelectOption[]|string} options
  * @property {boolean} allowClear
  * @property {boolean} disabled
+ * @property {{ dragRef: Function }} puck
  */
 
 const normalizeOptions = (options) => {
@@ -28,6 +29,7 @@ const normalizeOptions = (options) => {
 
 const SelectBlock = {
   label: "Select",
+  inline: true,
   fields: {
     placeholder: { type: "text" },
     mode: {
@@ -72,14 +74,16 @@ const SelectBlock = {
   /**
    * @param {SelectBlockProps} props
    */
-  render: ({ placeholder, mode, options, allowClear, disabled }) => (
-    <Select
-      placeholder={placeholder}
-      mode={mode === "multiple" ? "multiple" : undefined}
-      options={normalizeOptions(options)}
-      allowClear={allowClear}
-      disabled={disabled}
-    />
+  render: ({ placeholder, mode, options, allowClear, disabled, puck }) => (
+    <span className="inline-control" ref={puck.dragRef}>
+      <Select
+        placeholder={placeholder}
+        mode={mode === "multiple" ? "multiple" : undefined}
+        options={normalizeOptions(options)}
+        allowClear={allowClear}
+        disabled={disabled}
+      />
+    </span>
   ),
 };
 

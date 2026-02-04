@@ -12,6 +12,7 @@ import { Col } from "antd";
 
 const ColBlock = {
   label: "Col",
+  inline: true,
   fields: {
     span: { type: "number", min: 1, max: 24 },
     offset: { type: "number", min: 0, max: 24 },
@@ -28,8 +29,18 @@ const ColBlock = {
   render: ({ span, offset, flex, puck, id }) => {
     const zone = `col-${id}-content`;
     return (
-      <Col span={span} offset={offset} flex={flex || undefined}>
-        {puck.renderDropZone({ zone })}
+      <Col
+        ref={puck.dragRef}
+        className="col-block"
+        span={span}
+        offset={offset}
+        flex={flex || undefined}
+      >
+        {puck.renderDropZone({
+          zone,
+          disallow: ["Col"],
+          className: "col-dropzone",
+        })}
       </Col>
     );
   },
