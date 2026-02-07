@@ -53,6 +53,8 @@ const RowBlock = {
    */
   render: ({ gutter, align, justify, wrap, puck, id }) => {
     const zone = `row-${id}-content`;
+    const numericGutter = Number.isFinite(gutter) ? Math.max(0, gutter) : 0;
+    const edgePadding = numericGutter / 2;
     const alignItemsMap = {
       top: "flex-start",
       middle: "center",
@@ -67,20 +69,27 @@ const RowBlock = {
       "space-evenly": "space-evenly",
     };
     return (
-      <Row gutter={gutter} align={align} justify={justify} wrap={wrap}>
-        {puck.renderDropZone({
-          zone,
-          className: "row-dropzone",
-          collisionAxis: "x",
-          style: {
-            display: "flex",
-            width: "100%",
-            flexWrap: wrap ? "wrap" : "nowrap",
-            alignItems: alignItemsMap[align] || "flex-start",
-            justifyContent: justifyContentMap[justify] || "flex-start",
-          },
-        })}
-      </Row>
+      <div
+        className="row-block-wrapper"
+        style={{ paddingLeft: edgePadding, paddingRight: edgePadding }}
+      >
+        <Row gutter={numericGutter} align={align} justify={justify} wrap={wrap}>
+          {puck.renderDropZone({
+            zone,
+            allow: ["Col"],
+            className: "row-dropzone",
+            collisionAxis: "x",
+            minEmptyHeight: 64,
+            style: {
+              display: "flex",
+              width: "100%",
+              flexWrap: wrap ? "wrap" : "nowrap",
+              alignItems: alignItemsMap[align] || "flex-start",
+              justifyContent: justifyContentMap[justify] || "flex-start",
+            },
+          })}
+        </Row>
+      </div>
     );
   },
 };

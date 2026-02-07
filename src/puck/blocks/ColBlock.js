@@ -28,6 +28,23 @@ const ColBlock = {
    */
   render: ({ span, offset, flex, puck, id }) => {
     const zone = `col-${id}-content`;
+    const normalizedSpan = Number.isFinite(span)
+      ? Math.min(24, Math.max(1, span))
+      : 24;
+    const normalizedOffset = Number.isFinite(offset)
+      ? Math.min(24, Math.max(0, offset))
+      : 0;
+    const spanPercent = `${(normalizedSpan / 24) * 100}%`;
+    const offsetPercent = `${(normalizedOffset / 24) * 100}%`;
+    const hasFlex = typeof flex === "string" && flex.trim().length > 0;
+    const style = {
+      display: "inline-block",
+      verticalAlign: "top",
+      width: hasFlex ? undefined : spanPercent,
+      maxWidth: hasFlex ? undefined : spanPercent,
+      marginLeft: normalizedOffset > 0 ? offsetPercent : undefined,
+    };
+
     return (
       <Col
         ref={puck.dragRef}
@@ -35,11 +52,14 @@ const ColBlock = {
         span={span}
         offset={offset}
         flex={flex || undefined}
+        style={style}
       >
         {puck.renderDropZone({
           zone,
           disallow: ["Col"],
           className: "col-dropzone",
+          collisionAxis: "dynamic",
+          minEmptyHeight: 64,
         })}
       </Col>
     );

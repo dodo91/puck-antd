@@ -2,6 +2,7 @@
   "name": "puck-antd",
   "version": "0.1.0",
   "private": true,
+  "homepage": ".",
   "dependencies": {
     "@measured/puck": "^0.20.2",
     "antd": "^5.16.2",

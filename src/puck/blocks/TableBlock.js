@@ -8,6 +8,7 @@ import { Table } from "antd";
  * @property {TableColumn[]|string} columns
  * @property {TableRecord[]|string} dataSource
  * @property {boolean} pagination
+ * @property {{ dragRef: Function }} puck
  */
 
 const normalizeColumns = (columns) => {
@@ -32,6 +33,7 @@ const normalizeDataSource = (dataSource) => {
 
 const TableBlock = {
   label: "Table",
+  inline: true,
   fields: {
     columns: {
       type: "array",
@@ -73,12 +75,14 @@ const TableBlock = {
   /**
    * @param {TableBlockProps} props
    */
-  render: ({ columns, dataSource, pagination }) => (
-    <Table
-      columns={normalizeColumns(columns)}
-      dataSource={normalizeDataSource(dataSource)}
-      pagination={pagination ? { pageSize: 5 } : false}
-    />
+  render: ({ columns, dataSource, pagination, puck }) => (
+    <div ref={puck.dragRef} className="table-block">
+      <Table
+        columns={normalizeColumns(columns)}
+        dataSource={normalizeDataSource(dataSource)}
+        pagination={pagination ? { pageSize: 5 } : false}
+      />
+    </div>
   ),
 };
 

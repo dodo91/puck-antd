@@ -24,3 +24,20 @@ The app will be available at `http://localhost:3000`.
 - Drag components from the left panel into the canvas.
 - Form items are designed to be placed inside a Form component.
 - Table content uses sample data to demonstrate layout.
+
+## Share as static files (no npm on receiver machine)
+
+This project is configured with `"homepage": "."`, so production assets use relative paths.
+
+1. Build and zip:
+
+```bash
+npm run build
+```
+
+```powershell
+Compress-Archive -Path ".\\build\\*" -DestinationPath ".\\puck-antd-build.zip" -Force
+```
+
+2. Share `puck-antd-build.zip`.
+3. Receiver unzips and opens `index.html` directly.

@@ -5,7 +5,7 @@ import { Form } from "antd";
  * @typedef {Object} FormBlockProps
  * @property {"horizontal"|"vertical"|"inline"} layout
  * @property {string} name
- * @property {{ renderDropZone: Function }} puck
+ * @property {{ renderDropZone: Function, isEditing: boolean }} puck
  * @property {string} id
  */
 
@@ -33,21 +33,27 @@ const FormBlock = {
    */
   render: ({ layout, name, puck, id }) => {
     const zone = `form-${id}-content`;
+    const editingClass = puck.isEditing ? " form-block--editing" : "";
     return (
-      <Form layout={layout} name={name || undefined}>
-        {puck.renderDropZone({
-          zone,
-          allow: [
-            "FormItem",
-            "Button",
-            "Row",
-            "Col",
-            "Stack",
-            "Typography",
-            "Card",
-          ],
-        })}
-      </Form>
+      <div className={`form-block${editingClass}`}>
+        {puck.isEditing ? (
+          <div className="form-block-handle">Form</div>
+        ) : null}
+        <Form layout={layout} name={name || undefined}>
+          {puck.renderDropZone({
+            zone,
+            allow: [
+              "FormItem",
+              "Button",
+              "Row",
+              "Col",
+              "Stack",
+              "Typography",
+              "Card",
+            ],
+          })}
+        </Form>
+      </div>
     );
   },
 };

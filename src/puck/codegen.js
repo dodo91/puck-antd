@@ -144,9 +144,23 @@ const buildProps = (item) => {
       };
     case "Input":
       return {
+        inputType: props.inputType && props.inputType !== "text" ? props.inputType : undefined,
         placeholder: props.placeholder || undefined,
+        size: props.size && props.size !== "middle" ? props.size : undefined,
+        status: props.status && props.status !== "default" ? props.status : undefined,
         disabled: props.disabled ? true : undefined,
         allowClear: props.allowClear ? true : undefined,
+        maxLength:
+          typeof props.maxLength === "number" && props.maxLength > 0 ? props.maxLength : undefined,
+        showCount:
+          (props.inputType === "textarea" || !props.inputType || props.inputType === "text") &&
+          props.showCount
+            ? true
+            : undefined,
+        rows:
+          props.inputType === "textarea" && typeof props.rows === "number" ? props.rows : undefined,
+        enterButton:
+          props.inputType === "search" && props.enterButton ? true : undefined,
       };
     case "Select":
       return {
@@ -247,6 +261,35 @@ const renderStack = (props, children, level) => {
   return renderTag("div", { style }, children, level);
 };
 
+const renderInput = (props, level) => {
+  const normalizedProps = { ...props };
+  const inputType = normalizedProps.inputType || "text";
+
+  delete normalizedProps.inputType;
+
+  if (inputType === "textarea") {
+    delete normalizedProps.enterButton;
+    return renderTag("Input.TextArea", normalizedProps, null, level);
+  }
+
+  if (inputType === "password") {
+    delete normalizedProps.enterButton;
+    delete normalizedProps.rows;
+    delete normalizedProps.showCount;
+    return renderTag("Input.Password", normalizedProps, null, level);
+  }
+
+  if (inputType === "search") {
+    delete normalizedProps.showCount;
+    delete normalizedProps.rows;
+    return renderTag("Input.Search", normalizedProps, null, level);
+  }
+
+  delete normalizedProps.enterButton;
+  delete normalizedProps.rows;
+  return renderTag("Input", normalizedProps, null, level);
+};
+
 const renderItem = (item, level, data) => {
   if (!item) {
     return "";
@@ -276,7 +319,7 @@ const renderItem = (item, level, data) => {
         level
       );
     case "Input":
-      return renderTag("Input", buildProps(item), null, level);
+      return renderInput(buildProps(item), level);
     case "Select":
       return renderTag("Select", buildProps(item), null, level);
     case "DatePicker":
