@@ -9,6 +9,7 @@ import RowBlock from "./RowBlock";
 import SelectBlock from "./SelectBlock";
 import StackBlock from "./StackBlock";
 import TableBlock from "./TableBlock";
+import TabsBlock from "./TabsBlock";
 import TypographyBlock from "./TypographyBlock";
 
 const blocks = {
@@ -23,6 +24,7 @@ const blocks = {
   Col: ColBlock,
   Stack: StackBlock,
   Table: TableBlock,
+  Tabs: TabsBlock,
   Typography: TypographyBlock,
 };
 

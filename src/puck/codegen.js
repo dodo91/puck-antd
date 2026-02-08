@@ -1,5 +1,34 @@
 const indent = (level) => "  ".repeat(level);
 
+const MIN_TAB_COUNT = 1;
+const MAX_TAB_COUNT = 12;
+
+const normalizeTabCount = (value) => {
+  if (!Number.isFinite(value)) {
+    return MIN_TAB_COUNT;
+  }
+
+  const rounded = Math.round(value);
+  return Math.min(MAX_TAB_COUNT, Math.max(MIN_TAB_COUNT, rounded));
+};
+
+const normalizeTabLabel = (value, index) => {
+  if (typeof value === "string" && value.trim().length > 0) {
+    return value;
+  }
+
+  return `Tab ${index + 1}`;
+};
+
+const normalizeTabs = (tabs, tabCount) => {
+  const source = Array.isArray(tabs) ? tabs : [];
+
+  return Array.from({ length: tabCount }, (_, index) => ({
+    title: normalizeTabLabel(source[index]?.title, index),
+    key: String(index + 1),
+  }));
+};
+
 const zoneNameForItem = (item) => {
   if (!item || !item.props || !item.props.id) {
     return null;
@@ -25,15 +54,46 @@ const zoneNameForItem = (item) => {
   }
 };
 
-const getZoneContent = (data, item) => {
-  const zone = zoneNameForItem(item);
+const getZoneItems = (data, itemId, zone) => {
   if (!zone || !data || !data.zones) {
     return [];
   }
 
-  const zoneCompound = `${item.props.id}:${zone}`;
+  const zoneCompound = `${itemId}:${zone}`;
 
   return data.zones[zoneCompound] || data.zones[zone] || [];
+};
+
+const getZoneContent = (data, item) => {
+  const zone = zoneNameForItem(item);
+  if (!zone || !item || !item.props || !item.props.id) {
+    return [];
+  }
+
+  return getZoneItems(data, item.props.id, zone);
+};
+
+const getTabsForItem = (item, data) => {
+  if (!item || item.type !== "Tabs" || !item.props) {
+    return [];
+  }
+
+  const id = item.props.id;
+  const tabCount = normalizeTabCount(item.props.tabCount);
+  const tabs = normalizeTabs(item.props.tabs, tabCount);
+
+  if (!id) {
+    return tabs.map((tab) => ({ ...tab, children: [] }));
+  }
+
+  return tabs.map((tab, index) => {
+    const zone = `tabs-${id}-tab-${index + 1}-content`;
+
+    return {
+      ...tab,
+      children: getZoneItems(data, id, zone),
+    };
+  });
 };
 
 const formatJSXValue = (value, level) => {
@@ -204,6 +264,15 @@ const buildProps = (item) => {
         justify: props.justify || "start",
         wrap: props.wrap !== false,
       };
+    case "Tabs":
+      return {
+        type: props.type && props.type !== "line" ? props.type : undefined,
+        tabPosition:
+          props.tabPosition && props.tabPosition !== "top" ? props.tabPosition : undefined,
+        size: props.size && props.size !== "middle" ? props.size : undefined,
+        centered: props.centered ? true : undefined,
+        destroyOnHidden: props.destroyOnHidden ? true : undefined,
+      };
     default:
       return Object.keys(props).reduce((acc, key) => {
         if (key !== "id") {
@@ -261,6 +330,27 @@ const renderStack = (props, children, level) => {
   return renderTag("div", { style }, children, level);
 };
 
+const renderTabs = (item, level, data) => {
+  const tabPanes = getTabsForItem(item, data)
+    .map((tab) => {
+      const paneChildren = renderChildren(tab.children, level + 1, data);
+      return renderTag(
+        "Tabs.TabPane",
+        {
+          tab: tab.title,
+          key: tab.key,
+        },
+        paneChildren,
+        level + 1
+      );
+    })
+    .join("\n");
+
+  const children = `\n${tabPanes}\n${indent(level)}`;
+
+  return renderTag("Tabs", buildProps(item), children, level);
+};
+
 const renderInput = (props, level) => {
   const normalizedProps = { ...props };
   const inputType = normalizedProps.inputType || "text";
@@ -311,6 +401,8 @@ const renderItem = (item, level, data) => {
       return renderTag("Card", buildProps(item), childMarkup, level);
     case "Stack":
       return renderStack(buildProps(item), childMarkup, level);
+    case "Tabs":
+      return renderTabs(item, level, data);
     case "Button":
       return renderTag(
         "Button",
@@ -336,6 +428,17 @@ const renderItem = (item, level, data) => {
 const collectTypes = (items, data, set) => {
   items.forEach((item) => {
     set.add(item.type);
+
+    if (item.type === "Tabs") {
+      const tabs = getTabsForItem(item, data);
+      tabs.forEach((tab) => {
+        if (tab.children.length) {
+          collectTypes(tab.children, data, set);
+        }
+      });
+      return;
+    }
+
     const children = getZoneContent(data, item);
     if (children.length) {
       collectTypes(children, data, set);
@@ -359,6 +462,7 @@ const getImports = (data) => {
     Col: "Col",
     Card: "Card",
     Table: "Table",
+    Tabs: "Tabs",
     Typography: "Typography",
   };
 

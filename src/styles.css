@@ -74,6 +74,39 @@ body {
   min-width: 0;
 }
 
+.tabs-block {
+  width: 100%;
+  min-width: 0;
+}
+
+.tabs-panel-content {
+  width: 100%;
+  min-width: 0;
+  box-sizing: border-box;
+}
+
+.tabs-block .ant-tabs-nav {
+  margin-bottom: 8px;
+  padding-inline: 8px;
+}
+
+.tabs-block .ant-tabs-content-holder {
+  padding-inline: 8px;
+}
+
+[data-puck-component].tabs-block .ant-tabs-nav,
+[data-puck-component].tabs-block .ant-tabs-nav * {
+  pointer-events: auto !important;
+}
+
+.tabs-panel-dropzone {
+  width: 100%;
+}
+
+.tabs-panel-dropzone:empty {
+  min-height: 48px;
+}
+
 .input-block {
   width: 100%;
   min-width: 0;

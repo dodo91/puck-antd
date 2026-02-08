@@ -48,6 +48,7 @@ const FormBlock = {
               "Row",
               "Col",
               "Stack",
+              "Tabs",
               "Typography",
               "Card",
             ],
